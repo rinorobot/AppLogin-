@@ -61,6 +61,10 @@ class HomeFragment : Fragment() {
             login()
         }
 
+        binding.btnIrARegistro.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_nav_slideshow)
+        }
+
     }
 
     override fun onDestroyView() {
@@ -69,29 +73,29 @@ class HomeFragment : Fragment() {
     }
 
     fun login(){
-        val correo: String = view?.findViewById<EditText>(R.id.etNombre)?.text.toString()
-        val password: String = view?.findViewById<EditText>(R.id.etPassword)?.text.toString()
+        val correo: String = view?.findViewById<EditText>(R.id.etNombre)?.text.toString().trim()
+        val password: String = view?.findViewById<EditText>(R.id.etPassword)?.text.toString().trim()
 
 
         auth.signInWithEmailAndPassword(correo,password).addOnCompleteListener {
             if (it.isSuccessful){
                 Toast.makeText(requireContext(),"Login exitoso", Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_nav_home_to_nav_gallery)
 
             }
             else{
                 Toast.makeText(requireContext(),"Error en el login"+it.exception.toString(), Toast.LENGTH_LONG).show()
             }
         }
+
     }
 
     override fun onStart() {
         super.onStart()
-        auth.signOut()
+
         val user: FirebaseUser? = auth.currentUser
-        if (user==null){
-              findNavController().navigate(R.id.action_nav_home_to_nav_slideshow)
-        }  else{
-             findNavController().navigate(R.id.action_nav_home_to_nav_gallery)
+        if (user!=null){
+            findNavController().navigate(R.id.action_nav_home_to_nav_gallery)
         }
 
     }
